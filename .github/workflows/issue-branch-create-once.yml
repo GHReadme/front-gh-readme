@@ -1,0 +1,63 @@
+name: Issue branch (create once)
+on:
+  issues:
+    types: [opened, labeled]  # labeled — если template уже проставил метки
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: issue-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure default label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const issue = context.payload.issue;
+            // добавить create-branch, если его нет
+            const has = (n) => (issue.labels||[]).some(l => (l.name||'').toLowerCase() === n);
+            if (!has('create-branch')) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ['create-branch'] });
+            }
+
+      - name: Create branch once
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const issue = context.payload.issue;
+            const base = context.payload.repository.default_branch;
+
+            const labels = (issue.labels || [])
+              .map(l => (l.name || '').toString())
+              .filter(n => n.toLowerCase() !== 'create-branch' && n.trim().length > 0);
+
+            // sanitize + простая транслитерация
+            const map = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
+            const sanitize = (s) => (s||'').toLowerCase().split('').map(c=>map[c]??c).join('')
+              .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0, 40);
+
+            const parts = labels.map(sanitize).filter(Boolean).sort(); // сортируем для стабильности
+            const suffix = parts.length ? `-${parts.join('-')}` : '';
+            const branch = `issue/${issue.number}${suffix}`;
+
+            // если ветка уже есть — выходим (не переименовываем)
+            try {
+              await github.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
+              await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `Ветка уже есть: \`${branch}\`.` });
+              return;
+            } catch {}
+
+            // создать от base
+            const baseRef = await github.rest.git.getRef({ owner, repo, ref: `heads/${base}` });
+            const sha = baseRef.data.object.sha;
+
+            await github.rest.git.createRef({ owner, repo, ref: `refs/heads/${branch}`, sha });
+            const url = `https://github.com/${owner}/${repo}/tree/${branch}`;
+            await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `Создал ветку \`${branch}\` от \`${base}\`. [Перейти](${url})` });
