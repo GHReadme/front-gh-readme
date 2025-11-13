@@ -14,3 +14,6 @@
    ```bash
    git fetch --all
    git checkout issue/{номер-issue}
+4. **Коммиты** создаем коммит с указанием номера issue
+  ```bash
+    git commit -m "#{номер-issue} текст коммита"
