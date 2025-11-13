@@ -15,7 +15,8 @@
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx,json,css,md}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "bash -c tsc -p tsconfig.json --noEmit"
     ]
   },
   "dependencies": {
