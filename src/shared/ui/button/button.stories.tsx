@@ -10,7 +10,7 @@ import Button from './index';
 import '@mantine/core/styles.css';
 
 const meta: Meta<typeof Button> = {
-  title: 'Buttons',
+  title: 'shared/ui/button',
   component: Button,
   parameters: {
     layout: 'centered',
