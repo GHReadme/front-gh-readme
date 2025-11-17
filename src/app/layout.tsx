@@ -1,8 +1,11 @@
+import React, { ReactNode } from 'react';
+
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+
 import './globals.css';
-import React, { ReactNode } from 'react';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+
 import '@mantine/core/styles.css';
 
 const geistSans = Geist({

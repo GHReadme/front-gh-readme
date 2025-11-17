@@ -1,15 +1,134 @@
 @import 'tailwindcss';
 
+:root {
+  /* ===== Base / общие цвета ===== */
+
+  /* фон */
+  --color-bg: #f6f8fa;
+  --color-bg-subtle: #ffffff;
+
+  /* границы */
+  --color-border: #d0d7de;
+  --color-border-muted: #d8dee4;
+
+  /* текст */
+  --color-text: #24292f;
+  --color-text-muted: #57606a;
+  --color-text-on-accent: #ffffff;
+
+  /* акцент (ссылки, primary) */
+  --color-accent: #0969da;
+  --color-accent-hover: #1f6feb;
+
+  /* статусы */
+  --color-success: #2da44e;
+  --color-success-hover: #2c974b;
+
+  --color-danger: #cf222e;
+  --color-danger-hover: #a40e26;
+
+  --color-warning: #9a6700;
+
+  --color-success-bg: #dafbe1;
+  --color-danger-bg: #ffebe9;
+  --color-warning-bg: #fff8c5;
+
+  /* ===== Buttons: общие токены ===== */
+
+  --btn-border-radius: 6px;
+  --btn-font-size: 14px;
+  --btn-font-weight: 500;
+  --btn-padding-y: 6px;
+  --btn-padding-x: 12px;
+
+  --btn-shadow-none: none;
+  --btn-shadow-subtle: 0 1px 0 rgba(27, 31, 36, 0.04);
+
+  /* ===== Primary button (синяя, как на GitHub) ===== */
+
+  --btn-primary-bg: var(--color-accent);
+  --btn-primary-bg-hover: var(--color-accent-hover);
+  --btn-primary-bg-active: #0954b4;
+
+  --btn-primary-text: var(--color-text-on-accent);
+  --btn-primary-border: rgba(31, 111, 235, 0.6);
+
+  --btn-primary-shadow: var(--btn-shadow-subtle);
+
+  /* disabled */
+  --btn-primary-bg-disabled: #94b6f2;
+  --btn-primary-text-disabled: rgba(255, 255, 255, 0.8);
+  --btn-primary-border-disabled: transparent;
+
+  /* ===== Secondary / Default (серая, как "Default" на GitHub) ===== */
+
+  --btn-secondary-bg: #f6f8fa;
+  --btn-secondary-bg-hover: #f3f4f6;
+  --btn-secondary-bg-active: #ebecf0;
+
+  --btn-secondary-text: var(--color-text);
+  --btn-secondary-border: var(--color-border);
+
+  --btn-secondary-shadow: var(--btn-shadow-subtle);
+
+  /* disabled */
+  --btn-secondary-bg-disabled: #f6f8fa;
+  --btn-secondary-text-disabled: #8c959f;
+  --btn-secondary-border-disabled: #d8dee4;
+
+  /* ===== Outline button (прозрачный фон + рамка) ===== */
+
+  --btn-outline-bg: transparent;
+  --btn-outline-bg-hover: rgba(175, 184, 193, 0.12);
+  --btn-outline-bg-active: rgba(175, 184, 193, 0.24);
+
+  --btn-outline-text: var(--color-text);
+  --btn-outline-border: var(--color-border);
+
+  --btn-outline-shadow: var(--btn-shadow-none);
+
+  /* ===== Ghost / Subtle (только текст, лёгкий hover) ===== */
+
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: rgba(9, 105, 218, 0.08);
+  --btn-ghost-bg-active: rgba(9, 105, 218, 0.16);
+
+  --btn-ghost-text: var(--color-accent);
+  --btn-ghost-border: transparent;
+
+  /* ===== Danger button ===== */
+
+  --btn-danger-bg: var(--color-danger);
+  --btn-danger-bg-hover: var(--color-danger-hover);
+  --btn-danger-bg-active: #801018;
+
+  --btn-danger-text: var(--color-text-on-accent);
+  --btn-danger-border: rgba(172, 32, 40, 0.6);
+
+  --btn-danger-shadow: var(--btn-shadow-subtle);
+
+  /* ===== Success button (зелёная) ===== */
+
+  --btn-success-bg: var(--color-success);
+  --btn-success-bg-hover: var(--color-success-hover);
+  --btn-success-bg-active: #1f7a38;
+
+  --btn-success-text: var(--color-text-on-accent);
+  --btn-success-border: rgba(31, 111, 73, 0.6);
+
+  --btn-success-shadow: var(--btn-shadow-subtle);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 a {
