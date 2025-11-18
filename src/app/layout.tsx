@@ -8,6 +8,8 @@ import './globals.css';
 
 import '@mantine/core/styles.css';
 
+import style from './layout.module.scss';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -29,13 +31,16 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="ru" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <title>GH Readme</title>
         <ColorSchemeScript />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
-        <MantineProvider>{children}</MantineProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`} suppressHydrationWarning>
+        <MantineProvider>
+          <h1 className={style.title}>GH Readme</h1>
+          <div className="h-full w-full p-2">{children}</div>
+        </MantineProvider>
       </body>
     </html>
   );
