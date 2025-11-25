@@ -24,7 +24,7 @@ const Textarea: React.FC<TextareaProps> = ({
     onChange?.(e.target.value ?? '');
   };
 
-  const hasValue = value !== '';
+  const hasValue = !!value && value !== '';
 
   const defaultRightSection = (
     <MantineInput.ClearButton
@@ -38,7 +38,7 @@ const Textarea: React.FC<TextareaProps> = ({
 
   return (
     <MantineTextarea
-      value={value}
+      value={value ?? ''}
       onChange={handleOnChange}
       rightSection={rightSection ?? defaultRightSection}
       styles={{

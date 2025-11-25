@@ -117,6 +117,10 @@
   --btn-success-border: rgba(31, 111, 73, 0.6);
 
   --btn-success-shadow: var(--btn-shadow-subtle);
+
+  --entities-width: 500px;
+  --entities-border-radius: 10px;
+  --entities-border: 2px solid #c3c3c5;
 }
 
 *,

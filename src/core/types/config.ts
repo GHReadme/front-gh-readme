@@ -319,13 +319,6 @@ export interface ProfileReadmeConfig {
     location?: string;
 
     /**
-     * Таймзона (если хочешь вывести в README).
-     * Пример:
-     * - 'Europe/Oslo'
-     */
-    timezone?: string;
-
-    /**
      * Основной стек в виде короткой строки.
      * Примеры:
      * - 'React · TypeScript · Node.js'
@@ -335,15 +328,9 @@ export interface ProfileReadmeConfig {
 
     /**
      * Языки, на которых удобно общаться, для блока "Languages".
-     * Пример: ['English', 'Russian']
+     * Пример: 'English, Russian'
      */
-    languages?: string[];
-
-    /**
-     * Ссылка на аватар/фото (не обязательно).
-     * Обычно можно брать GitHub-аватар.
-     */
-    avatarUrl?: string;
+    languages?: string;
   };
 
   // ─────────────────────────────────────────────────────────────
