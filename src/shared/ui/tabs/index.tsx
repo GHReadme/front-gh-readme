@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useMemo, useState } from 'react';
 
 import { Tabs as MantineTabs, TabsProps as MantineTabsProps } from '@mantine/core';
@@ -42,7 +44,7 @@ const Tabs = <TTabs extends readonly TabType[]>({
 
       {tabs.map((tab) => (
         <MantineTabs.Panel key={tab.title} value={tab.title}>
-          <div className="h-full">{tab.content}</div>
+          <div className="h-full p-3">{tab.content}</div>
         </MantineTabs.Panel>
       ))}
     </MantineTabs>
