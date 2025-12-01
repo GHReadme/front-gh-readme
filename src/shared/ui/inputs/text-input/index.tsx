@@ -15,8 +15,9 @@ const TextInput: React.FC<TextInputProps> = ({ value, rightSection, onChange, ..
     onChange?.(e.currentTarget.value ?? '');
   };
 
-  const hasValue = value !== '';
+  const hasValue = !!value && value !== '';
 
+  console.log({ hasValue, value });
   const defaultRightSection = (
     <MantineInput.ClearButton
       onClick={() => onChange?.('')}
@@ -29,7 +30,7 @@ const TextInput: React.FC<TextInputProps> = ({ value, rightSection, onChange, ..
 
   return (
     <MantineTextInput
-      value={value}
+      value={value ?? ''}
       onChange={handleOnChange}
       rightSection={rightSection ?? defaultRightSection}
       {...props}

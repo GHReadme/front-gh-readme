@@ -10,10 +10,8 @@ export const exampleProfileConfig: ProfileReadmeConfig = {
     role: 'Senior Frontend Developer',
     company: 'AwesomeCorp',
     location: 'Oslo, Norway',
-    timezone: 'Europe/Oslo',
     mainStackLine: 'React · TypeScript · Node.js',
-    languages: ['English', 'Russian'],
-    avatarUrl: 'https://avatars.githubusercontent.com/u/1234567',
+    languages: 'English , Russian',
   },
 
   about: {
