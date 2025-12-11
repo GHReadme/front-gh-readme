@@ -16,8 +16,6 @@ const TextInput: React.FC<TextInputProps> = ({ value, rightSection, onChange, ..
   };
 
   const hasValue = !!value && value !== '';
-
-  console.log({ hasValue, value });
   const defaultRightSection = (
     <MantineInput.ClearButton
       onClick={() => onChange?.('')}

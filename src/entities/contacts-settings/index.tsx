@@ -6,8 +6,7 @@ import type { ProfileReadmeConfig } from 'core/types';
 
 const ContactsSettings: React.FC = () => {
   const { watch } = useFormContext<ProfileReadmeConfig>();
-  const data = watch('contacts');
-  console.log('contacts', data);
+  watch('contacts');
   return <div className="p-2">Тут заполнение/настройки контактов</div>;
 };
 
