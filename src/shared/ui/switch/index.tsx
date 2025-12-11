@@ -13,14 +13,7 @@ const Switch: React.FC<SwitchProps> = ({ checked, defaultChecked, onChange, ...r
     onChange?.(event.currentTarget.checked);
   };
 
-  return (
-    <MantineSwitch
-      checked={checked}
-      defaultChecked={defaultChecked}
-      onChange={handleChange}
-      {...rest}
-    />
-  );
+  return <MantineSwitch checked={checked} defaultChecked={defaultChecked} onChange={handleChange} {...rest} />;
 };
 
 export default Switch;
