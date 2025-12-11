@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Title, Text, Stack, Paper, Grid } from '@mantine/core';
 
 import type { ProfileReadmeConfig } from 'core/types';
+import { useGithubUser } from './api';
 import TextInput from 'shared/ui/inputs/text-input';
 
 import styles from './profile.module.scss';
@@ -12,6 +13,7 @@ import styles from './profile.module.scss';
 const ProfileSettings: React.FC = () => {
   const { control, setValue } = useFormContext<ProfileReadmeConfig>();
   const profile = useWatch({ control, name: 'profile' });
+  const { data: githubUser } = useGithubUser(profile?.username);
 
   const handleChange = useMemo(
     () =>
@@ -20,6 +22,22 @@ const ProfileSettings: React.FC = () => {
         setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true }),
     [setValue],
   );
+
+  useEffect(() => {
+    if (!githubUser) return;
+
+    const updates: Partial<ProfileReadmeConfig['profile']> = {};
+
+    if (githubUser.name && !profile?.fullName) updates.fullName = githubUser.name;
+    if (githubUser.company && !profile?.company) updates.company = githubUser.company;
+    if (githubUser.location && !profile?.location) updates.location = githubUser.location;
+
+    (Object.entries(updates) as [keyof ProfileReadmeConfig['profile'], string][]).forEach(
+      ([key, value]) => {
+        setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true });
+      },
+    );
+  }, [githubUser, profile, setValue]);
 
   return (
     <Paper withBorder radius="md" shadow="xs" className={styles.profileSettings}>
