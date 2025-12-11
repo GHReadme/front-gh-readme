@@ -1,10 +1,9 @@
 import React from 'react';
 
-/**
- * Тут собираются все entities внутри которых уже обработка полей
- */
+import GithubStatsSettings from 'entities/github-stats-settings';
+
 const StatsSettings: React.FC = () => {
-  return <div>тут подключение и настройка статистики с сервисов типа LeetCode, Codewars и т.д.</div>;
+  return <GithubStatsSettings />;
 };
 
 export default StatsSettings;
