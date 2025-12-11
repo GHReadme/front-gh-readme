@@ -11,9 +11,14 @@ import TextInput from 'shared/ui/inputs/text-input';
 import styles from './profile.module.scss';
 
 const ProfileSettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const {
+    control,
+    setValue,
+    formState: { dirtyFields },
+  } = useFormContext<ProfileReadmeConfig>();
   const profile = useWatch({ control, name: 'profile' });
   const { data: githubUser } = useGithubUser(profile?.username);
+  const profileDirty = useMemo(() => dirtyFields?.profile ?? {}, [dirtyFields]);
 
   const handleChange = useMemo(
     () =>
@@ -28,16 +33,19 @@ const ProfileSettings: React.FC = () => {
 
     const updates: Partial<ProfileReadmeConfig['profile']> = {};
 
-    if (githubUser.name && !profile?.fullName) updates.fullName = githubUser.name;
-    if (githubUser.company && !profile?.company) updates.company = githubUser.company;
-    if (githubUser.location && !profile?.location) updates.location = githubUser.location;
+    if (githubUser.name && !profile?.fullName && !profileDirty.fullName)
+      updates.fullName = githubUser.name;
+    if (githubUser.company && !profile?.company && !profileDirty.company)
+      updates.company = githubUser.company;
+    if (githubUser.location && !profile?.location && !profileDirty.location)
+      updates.location = githubUser.location;
 
     (Object.entries(updates) as [keyof ProfileReadmeConfig['profile'], string][]).forEach(
       ([key, value]) => {
         setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true });
       },
     );
-  }, [githubUser, profile, setValue]);
+  }, [githubUser, profile, profileDirty, setValue]);
 
   return (
     <Paper withBorder radius="md" shadow="xs" className={styles.profileSettings}>
