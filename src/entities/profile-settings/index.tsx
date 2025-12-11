@@ -1,68 +1,105 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
+
+import { Title, Text, Stack, Paper, Grid } from '@mantine/core';
 
 import type { ProfileReadmeConfig } from 'core/types';
 import TextInput from 'shared/ui/inputs/text-input';
 
-import { useGithubUser } from './api';
-
 import styles from './profile.module.scss';
 
 const ProfileSettings: React.FC = () => {
-  const { watch, setValue } = useFormContext<ProfileReadmeConfig>();
-  const data = watch('profile');
+  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const profile = useWatch({ control, name: 'profile' });
 
-  const { data: dataRequest } = useGithubUser(data?.username);
-
-  console.log({ dataRequest });
+  const handleChange = useMemo(
+    () =>
+      <TKey extends keyof ProfileReadmeConfig['profile']>(key: TKey) =>
+      (value: string) =>
+        setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true }),
+    [setValue],
+  );
 
   return (
-    <div className={styles.profileSettings}>
-      <h2 className={styles.profileTitle}>Общие настройки профиля</h2>
-      <TextInput
-        label="Username профиля GitHub"
-        placeholder="username"
-        value={data?.username}
-        onChange={(v) => setValue('profile.username', v)}
-      />
-      <TextInput
-        label="ФИО"
-        placeholder="Фамиоия Имя Отчество"
-        value={data?.fullName}
-        onChange={(v) => setValue('profile.fullName', v)}
-      />
-      <TextInput
-        label="Роль в компании"
-        placeholder="Тимлид"
-        value={data?.role}
-        onChange={(v) => setValue('profile.role', v)}
-      />
-      <TextInput
-        label="Компания"
-        placeholder="ОАО Компания"
-        value={data?.company}
-        onChange={(v) => setValue('profile.company', v)}
-      />
-      <TextInput
-        label="Локация"
-        placeholder="Россия/Москва"
-        value={data?.location}
-        onChange={(v) => setValue('profile.location', v)}
-      />
-      <TextInput
-        label="Основной стек в виде короткой строки"
-        placeholder="React, TypeScript, Redux"
-        value={data?.location}
-        onChange={(v) => setValue('profile.location', v)}
-      />
-      <TextInput
-        label="Языки, на которых удобно общаться"
-        placeholder="English, Russian"
-        value={data?.languages}
-        onChange={(v) => setValue('profile.languages', v)}
-      />
-    </div>
+    <Paper withBorder radius="md" shadow="xs" className={styles.profileSettings}>
+      <div className={styles.profileHeader}>
+        <Title order={3} className={styles.profileTitle}>
+          Общие настройки профиля
+        </Title>
+        <Text size="sm" c="dimmed">
+          Эти поля используются для генерации README и соответствуют типизации профиля.
+        </Text>
+      </div>
+
+      <Stack gap="md" className={styles.formContent}>
+        <TextInput
+          label="Username профиля GitHub"
+          placeholder="octocat"
+          description="Используется для загрузки данных с GitHub API."
+          value={profile?.username}
+          onChange={handleChange('username')}
+          required
+        />
+
+        <Grid gutter="md" className={styles.fieldsGrid}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label="ФИО"
+              placeholder="Фамилия Имя Отчество"
+              description="Отображается в README, если указано."
+              value={profile?.fullName}
+              onChange={handleChange('fullName')}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label="Роль в компании"
+              placeholder="Senior Frontend Developer"
+              description="Короткая формулировка вашей роли."
+              value={profile?.role}
+              onChange={handleChange('role')}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label="Компания"
+              placeholder="AwesomeCorp"
+              description="Текущая компания или род занятий."
+              value={profile?.company}
+              onChange={handleChange('company')}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label="Локация"
+              placeholder="Россия, Москва"
+              description="Город или формат работы (например, Remote)."
+              value={profile?.location}
+              onChange={handleChange('location')}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label="Основной стек"
+              placeholder="React · TypeScript · Node.js"
+              description="Короткая строка с ключевыми технологиями."
+              value={profile?.mainStackLine}
+              onChange={handleChange('mainStackLine')}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <TextInput
+              label="Языки для общения"
+              placeholder="English, Russian"
+              description="Например: English, Russian"
+              value={profile?.languages}
+              onChange={handleChange('languages')}
+            />
+          </Grid.Col>
+        </Grid>
+      </Stack>
+    </Paper>
   );
 };
 

@@ -6,8 +6,7 @@ import type { ProfileReadmeConfig } from 'core/types';
 
 const AboutSettings: React.FC = () => {
   const { watch } = useFormContext<ProfileReadmeConfig>();
-  const data = watch('about');
-  console.log('about', data);
+  watch('about');
   return <div className="p-2">Тут заполнение/настройки обо мне</div>;
 };
 
