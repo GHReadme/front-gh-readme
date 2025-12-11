@@ -1,1 +1,8 @@
-export type { ProfileReadmeConfig } from './config';
+export type {
+  ActivityFlag,
+  ContactItem,
+  ContentLink,
+  FeaturedProject,
+  ProfileReadmeConfig,
+  StackItem,
+} from './config';

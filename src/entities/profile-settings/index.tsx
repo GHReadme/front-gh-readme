@@ -8,8 +8,6 @@ import type { ProfileReadmeConfig } from 'core/types';
 import { useGithubUser } from './api';
 import TextInput from 'shared/ui/inputs/text-input';
 
-import styles from './profile.module.scss';
-
 const ProfileSettings: React.FC = () => {
   const {
     control,
@@ -55,17 +53,15 @@ const ProfileSettings: React.FC = () => {
   }, [githubUser, profile, profileDirty, setValue]);
 
   return (
-    <Paper withBorder radius="md" shadow="xs" className={styles.profileSettings}>
-      <div className={styles.profileHeader}>
-        <Title order={3} className={styles.profileTitle}>
-          Общие настройки профиля
-        </Title>
-        <Text size="sm" c="dimmed">
-          Эти поля используются для генерации README и соответствуют типизации профиля.
-        </Text>
-      </div>
+    <Paper withBorder radius="md" shadow="xs" p="md">
+      <Stack gap="md">
+        <div>
+          <Title order={3}>Общие настройки профиля</Title>
+          <Text size="sm" c="dimmed">
+            Эти поля используются для генерации README и соответствуют типизации профиля.
+          </Text>
+        </div>
 
-      <Stack gap="md" className={styles.formContent}>
         <TextInput
           label="Username профиля GitHub"
           placeholder="octocat"
@@ -75,7 +71,7 @@ const ProfileSettings: React.FC = () => {
           required
         />
 
-        <Grid gutter="md" className={styles.fieldsGrid}>
+        <Grid gutter="md">
           <Grid.Col span={{ base: 12, sm: 6 }}>
             <TextInput
               label="ФИО"
