@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { useFormContext, useWatch } from 'react-hook-form';
+import { Path, useFormContext, useWatch } from 'react-hook-form';
 
 import { Title, Text, Stack, Paper, Grid } from '@mantine/core';
 
@@ -22,7 +22,11 @@ const ProfileSettings: React.FC = () => {
 
   const handleChange = useCallback(
     <TKey extends keyof ProfileReadmeConfig['profile']>(key: TKey) =>
-    (value: string) => setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true }),
+    (value: string) =>
+      setValue(`profile.${key}` as Path<ProfileReadmeConfig>, value, {
+        shouldDirty: true,
+        shouldTouch: true,
+      }),
     [setValue],
   );
 
@@ -42,7 +46,10 @@ const ProfileSettings: React.FC = () => {
       const value = updates[key];
 
       if (typeof value !== 'undefined') {
-        setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true });
+        setValue(`profile.${key}` as Path<ProfileReadmeConfig>, value, {
+          shouldDirty: true,
+          shouldTouch: true,
+        });
       }
     });
   }, [githubUser, profile, profileDirty, setValue]);
