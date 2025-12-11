@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import 'app/globals.css';
 
 import { MantineProvider } from '@mantine/core';
 import type { Meta, StoryFn } from '@storybook/nextjs-vite';
-import { useArgs } from '@storybook/preview-api';
 
 import CheckBox from './index';
 
@@ -30,13 +29,20 @@ export default meta;
 type Story = StoryFn<typeof CheckBox>;
 
 export const Controlled: Story = (args) => {
-  const [{ checked }, updateArgs] = useArgs();
+  const [checked, setChecked] = useState(args.checked ?? false);
+
+  useEffect(() => {
+    if (typeof args.checked === 'boolean') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setChecked(args.checked);
+    }
+  }, [args.checked]);
 
   return (
     <CheckBox
       {...args}
       checked={checked}
-      onChange={(value) => updateArgs({ checked: value })}
+      onChange={setChecked}
     />
   );
 };
