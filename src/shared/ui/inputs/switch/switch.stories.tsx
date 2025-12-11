@@ -10,7 +10,7 @@ import Switch from './index';
 import '@mantine/core/styles.css';
 
 const meta: Meta<typeof Switch> = {
-  title: 'shared/ui/inputs',
+  title: 'shared/ui/switch',
   component: Switch,
   parameters: {
     layout: 'centered',
