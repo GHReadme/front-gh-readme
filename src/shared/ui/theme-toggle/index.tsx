@@ -7,7 +7,7 @@ import { IconMoon, IconSun } from '@tabler/icons-react';
 
 const ThemeToggle: React.FC = () => {
   const { setColorScheme } = useMantineColorScheme();
-  const computedColorScheme = useComputedColorScheme('light');
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
 
   const toggleTheme = () => {
     setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light');
