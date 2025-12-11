@@ -38,11 +38,13 @@ const ProfileSettings: React.FC = () => {
     if (githubUser.location && !profile?.location && !profileDirty.location)
       updates.location = githubUser.location;
 
-    (Object.entries(updates) as [keyof ProfileReadmeConfig['profile'], string][]).forEach(
-      ([key, value]) => {
+    (Object.keys(updates) as (keyof ProfileReadmeConfig['profile'])[]).forEach((key) => {
+      const value = updates[key];
+
+      if (typeof value !== 'undefined') {
         setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true });
-      },
-    );
+      }
+    });
   }, [githubUser, profile, profileDirty, setValue]);
 
   return (
