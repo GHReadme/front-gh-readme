@@ -17,12 +17,11 @@ const CheckBox = React.forwardRef<HTMLInputElement, CheckBoxProps>(
     const checkboxProps: MantineCheckboxProps = {
       ...props,
       onChange: handleOnChange,
-      ref,
       ...(checked !== undefined ? { checked } : {}),
       ...(checked === undefined && defaultChecked !== undefined ? { defaultChecked } : {}),
     };
 
-    return <MantineCheckbox {...checkboxProps} />;
+    return <MantineCheckbox ref={ref} {...checkboxProps} />;
   },
 );
 
