@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { Notifications } from '@mantine/notifications';
+import { ColorSchemeScript } from '@mantine/core';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
@@ -11,7 +10,7 @@ import './globals.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 
-import style from './layout.module.scss';
+import { AppProviders } from './AppProviders';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -41,11 +40,7 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`} suppressHydrationWarning>
         <ReactQueryProvider>
-          <MantineProvider>
-            <Notifications />
-            <h1 className={style.title}>GH Readme</h1>
-            <div className="h-full w-full p-2">{children}</div>
-          </MantineProvider>
+          <AppProviders>{children}</AppProviders>
         </ReactQueryProvider>
       </body>
     </html>
