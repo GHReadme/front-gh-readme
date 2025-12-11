@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -20,11 +20,9 @@ const ProfileSettings: React.FC = () => {
   const { data: githubUser } = useGithubUser(profile?.username);
   const profileDirty = useMemo(() => dirtyFields?.profile ?? {}, [dirtyFields]);
 
-  const handleChange = useMemo(
-    () =>
-      <TKey extends keyof ProfileReadmeConfig['profile']>(key: TKey) =>
-      (value: string) =>
-        setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true }),
+  const handleChange = useCallback(
+    <TKey extends keyof ProfileReadmeConfig['profile']>(key: TKey) =>
+    (value: string) => setValue(`profile.${key}`, value, { shouldDirty: true, shouldTouch: true }),
     [setValue],
   );
 
