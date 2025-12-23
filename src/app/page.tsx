@@ -8,6 +8,8 @@ import { TabType } from 'shared/ui/tabs/types';
 import BaseSettings from 'widgets/base-settings';
 import StatsSettings from 'widgets/stats-settings';
 
+import MarkdownEditor from '../widgets/markdown-editor';
+
 const tabs: TabType[] = [
   {
     title: 'Базовые настройки',
@@ -16,6 +18,10 @@ const tabs: TabType[] = [
   {
     title: 'Статистика',
     content: <StatsSettings />,
+  },
+  {
+    title: 'Markdown editor',
+    content: <MarkdownEditor />,
   },
 ] as const;
 
