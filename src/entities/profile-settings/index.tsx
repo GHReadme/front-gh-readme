@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -22,27 +22,45 @@ const ProfileSettings: React.FC = () => {
   const { data: githubUser } = useGithubUser(profile?.username);
   const profileDirty = useMemo(() => dirtyFields?.profile ?? {}, [dirtyFields]);
   const { setFieldValue } = useFormField<ProfileReadmeConfig>();
+  const prevUsernameRef = useRef(profile?.username);
+
+  useEffect(() => {
+    // При смене username сбрасываем автозаполняемые поля
+    if (prevUsernameRef.current !== profile?.username) {
+      prevUsernameRef.current = profile?.username;
+
+      if (!profileDirty.fullName) {
+        setValue('profile.fullName', '', { shouldDirty: false });
+      }
+      if (!profileDirty.company) {
+        setValue('profile.company', '', { shouldDirty: false });
+      }
+      if (!profileDirty.location) {
+        setValue('profile.location', '', { shouldDirty: false });
+      }
+    }
+  }, [profile?.username, profileDirty, setValue]);
 
   useEffect(() => {
     if (!githubUser) return;
 
     const updates: Partial<ProfileReadmeConfig['profile']> = {};
 
-    if (githubUser.name && !profile?.fullName && !profileDirty.fullName) updates.fullName = githubUser.name;
-    if (githubUser.company && !profile?.company && !profileDirty.company) updates.company = githubUser.company;
-    if (githubUser.location && !profile?.location && !profileDirty.location) updates.location = githubUser.location;
+    if (githubUser.name && !profileDirty.fullName) updates.fullName = githubUser.name;
+    if (githubUser.company && !profileDirty.company) updates.company = githubUser.company;
+    if (githubUser.location && !profileDirty.location) updates.location = githubUser.location;
 
     (Object.keys(updates) as (keyof ProfileReadmeConfig['profile'])[]).forEach((key) => {
       const value = updates[key];
 
       if (typeof value !== 'undefined') {
         setValue(`profile.${key}`, value, {
-          shouldDirty: true,
+          shouldDirty: false,
           shouldTouch: true,
         });
       }
     });
-  }, [githubUser, profile, profileDirty, setValue]);
+  }, [githubUser, profileDirty, setValue]);
 
   return (
     <Paper withBorder radius="md" shadow="xs" p="md">
