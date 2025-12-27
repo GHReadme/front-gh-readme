@@ -1,25 +1,23 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Grid, Paper, SegmentedControl, Stack, Switch, Text, Title } from '@mantine/core';
+import { Switch } from '@mantine/core';
 
-import type { ProfileReadmeConfig } from 'core/types';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Grid from '@/shared/ui/grid';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import SegmentedControl from '@/shared/ui/segmented-control';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const GithubStatsSettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const { control } = useFormContext<ProfileReadmeConfig>();
   const stats = useWatch({ control, name: 'githubStats' });
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['githubStats']>(key: TKey) =>
-    (value: ProfileReadmeConfig['githubStats'][TKey]) =>
-      setValue(`githubStats.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   return (
     <Paper withBorder radius="md" shadow="xs" p="md">
@@ -36,21 +34,21 @@ const GithubStatsSettings: React.FC = () => {
             <Switch
               label="Показать overview"
               checked={stats?.showOverviewCard ?? false}
-              onChange={(event) => handleChange('showOverviewCard')(event.currentTarget.checked)}
+              onChange={(event) => setFieldValue('githubStats.showOverviewCard')(event.currentTarget.checked)}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 4 }}>
             <Switch
               label="Показать топ языков"
               checked={stats?.showTopLangs ?? false}
-              onChange={(event) => handleChange('showTopLangs')(event.currentTarget.checked)}
+              onChange={(event) => setFieldValue('githubStats.showTopLangs')(event.currentTarget.checked)}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 4 }}>
             <Switch
               label="Показать streak"
               checked={stats?.showStreak ?? false}
-              onChange={(event) => handleChange('showStreak')(event.currentTarget.checked)}
+              onChange={(event) => setFieldValue('githubStats.showStreak')(event.currentTarget.checked)}
             />
           </Grid.Col>
         </Grid>
@@ -63,14 +61,14 @@ const GithubStatsSettings: React.FC = () => {
           ]}
           fullWidth
           value={stats?.theme ?? 'light'}
-          onChange={(value) => handleChange('theme')(value as ProfileReadmeConfig['githubStats']['theme'])}
+          onChange={(value) => setFieldValue('githubStats.theme')(value as ProfileReadmeConfig['githubStats']['theme'])}
         />
 
         <TextInput
           label="Кастомный username"
           placeholder="Переопределит profile.username"
           value={stats?.customUsername ?? ''}
-          onChange={(value) => handleChange('customUsername')(value)}
+          onChange={setFieldValue('githubStats.customUsername')}
         />
       </Stack>
     </Paper>

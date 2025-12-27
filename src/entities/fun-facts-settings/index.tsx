@@ -1,25 +1,22 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Button, Group, Paper, Stack, Switch, Text, Textarea, Title } from '@mantine/core';
+import { Button, Switch, Textarea } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 
-import type { ProfileReadmeConfig } from 'core/types';
+import type { ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Group from '@/shared/ui/group';
+import Paper from '@/shared/ui/paper';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const FunFactsSettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const { control } = useFormContext<ProfileReadmeConfig>();
   const funFacts = useWatch({ control, name: 'funFacts' });
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['funFacts']>(key: TKey) =>
-    (value: ProfileReadmeConfig['funFacts'][TKey]) =>
-      setValue(`funFacts.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   const handleItemsChange = (value: string) => {
     const items = value
@@ -27,12 +24,12 @@ const FunFactsSettings: React.FC = () => {
       .map((item) => item.trim())
       .filter(Boolean);
 
-    handleChange('items')(items);
+    setFieldValue('funFacts.items')(items);
   };
 
   const handleAddItem = () => {
     const items = [...(funFacts?.items ?? []), ''];
-    handleChange('items')(items);
+    setFieldValue('funFacts.items')(items);
   };
 
   return (
@@ -49,7 +46,7 @@ const FunFactsSettings: React.FC = () => {
           <Switch
             label="Показывать fun facts"
             checked={funFacts?.active ?? false}
-            onChange={(event) => handleChange('active')(event.currentTarget.checked)}
+            onChange={(event) => setFieldValue('funFacts.active')(event.currentTarget.checked)}
           />
           <Button leftSection={<IconPlus size={16} />} variant="light" onClick={handleAddItem}>
             Добавить строку

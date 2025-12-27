@@ -5,7 +5,8 @@ import { ReactNode, useState } from 'react';
 
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
-import { notification } from 'core/notification';
+
+import { notification } from '@/core/notification';
 
 export function ReactQueryProvider({ children }: { children: ReactNode }) {
   // useState чтобы не создавать новый QueryClient на каждый рендер

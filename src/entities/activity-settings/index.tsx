@@ -1,42 +1,40 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Button, Grid, Group, Paper, Stack, Switch, Text, Title } from '@mantine/core';
+import { Button, Switch } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
-import type { ActivityFlag, ProfileReadmeConfig } from 'core/types';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { ActivityFlag, ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Grid from '@/shared/ui/grid';
+import Group from '@/shared/ui/group';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const ActivitySettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const { control } = useFormContext<ProfileReadmeConfig>();
   const activity = useWatch({ control, name: 'activity' });
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['activity']>(key: TKey) =>
-    (value: ProfileReadmeConfig['activity'][TKey]) =>
-      setValue(`activity.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   const updateFlag = <TKey extends keyof ActivityFlag>(index: number, key: TKey, value: ActivityFlag[TKey]) => {
     const flags = [...(activity?.flags ?? [])];
     flags[index] = { ...flags[index], [key]: value } as ActivityFlag;
-    handleChange('flags')(flags);
+    setFieldValue('activity.flags')(flags);
   };
 
   const addFlag = () => {
     const flags = [...(activity?.flags ?? []), { label: 'Новый флаг', value: true }];
-    handleChange('flags')(flags);
+    setFieldValue('activity.flags')(flags);
   };
 
   const removeFlag = (index: number) => {
     const flags = [...(activity?.flags ?? [])];
     flags.splice(index, 1);
-    handleChange('flags')(flags);
+    setFieldValue('activity.flags')(flags);
   };
 
   return (
@@ -52,14 +50,14 @@ const ActivitySettings: React.FC = () => {
         <Switch
           label="Показывать блок активности"
           checked={activity?.active ?? false}
-          onChange={(event) => handleChange('active')(event.currentTarget.checked)}
+          onChange={(event) => setFieldValue('activity.active')(event.currentTarget.checked)}
         />
 
         <TextInput
           label="Предпочтительный способ связи"
           placeholder="Telegram или email"
           value={activity?.preferredContact ?? ''}
-          onChange={(value) => handleChange('preferredContact')(value)}
+          onChange={setFieldValue('activity.preferredContact')}
         />
 
         <Stack gap="sm">

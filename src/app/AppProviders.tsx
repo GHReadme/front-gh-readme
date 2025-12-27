@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { MantineProvider, localStorageColorSchemeManager } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
-import ThemeToggle from 'shared/ui/theme-toggle';
+import ThemeToggle from '@/shared/ui/theme-toggle';
 
 import style from './layout.module.scss';
 

@@ -1,42 +1,40 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Button, Grid, Group, Paper, Stack, Switch, Text, TextInput as MantineTextInput, Title } from '@mantine/core';
+import { Button, TextInput as MantineTextInput, Switch } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
-import type { ContentLink, ProfileReadmeConfig } from 'core/types';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { ContentLink, ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Grid from '@/shared/ui/grid';
+import Group from '@/shared/ui/group';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const ContentSettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const { control } = useFormContext<ProfileReadmeConfig>();
   const content = useWatch({ control, name: 'content' });
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['content']>(key: TKey) =>
-    (value: ProfileReadmeConfig['content'][TKey]) =>
-      setValue(`content.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   const updateLink = <TKey extends keyof ContentLink>(index: number, key: TKey, value: ContentLink[TKey]) => {
     const links = [...(content?.latest ?? [])];
     links[index] = { ...links[index], [key]: value } as ContentLink;
-    handleChange('latest')(links);
+    setFieldValue('content.latest')(links);
   };
 
   const addLink = () => {
     const links = [...(content?.latest ?? []), { title: '', url: '', platform: '' }];
-    handleChange('latest')(links);
+    setFieldValue('content.latest')(links);
   };
 
   const removeLink = (index: number) => {
     const links = [...(content?.latest ?? [])];
     links.splice(index, 1);
-    handleChange('latest')(links);
+    setFieldValue('content.latest')(links);
   };
 
   return (
@@ -52,14 +50,14 @@ const ContentSettings: React.FC = () => {
         <Switch
           label="Показывать блок контента"
           checked={content?.active ?? false}
-          onChange={(event) => handleChange('active')(event.currentTarget.checked)}
+          onChange={(event) => setFieldValue('content.active')(event.currentTarget.checked)}
         />
 
         <TextInput
           label="Базовый URL"
           placeholder="https://dev.to/your-username"
           value={content?.baseUrl ?? ''}
-          onChange={(value) => handleChange('baseUrl')(value)}
+          onChange={setFieldValue('content.baseUrl')}
         />
 
         <Stack gap="sm">

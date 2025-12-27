@@ -1,12 +1,20 @@
 import React, { useCallback } from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Button, Grid, Group, Paper, Select, Stack, Switch, Text, TextInput as MantineTextInput, Title } from '@mantine/core';
+import { Button, TextInput as MantineTextInput, Switch } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
-import type { ContactItem, ProfileReadmeConfig } from 'core/types';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { ContactItem, ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Grid from '@/shared/ui/grid';
+import Group from '@/shared/ui/group';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import Select from '@/shared/ui/select';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const contactOptions: { label: string; value: ContactItem['type'] }[] = [
   { label: 'Email', value: 'email' },
@@ -24,6 +32,7 @@ const contactOptions: { label: string; value: ContactItem['type'] }[] = [
 const ContactsSettings: React.FC = () => {
   const { control, setValue } = useFormContext<ProfileReadmeConfig>();
   const contacts = useWatch({ control, name: 'contacts' });
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   const updateContacts = useCallback(
     (items: ContactItem[]) =>
@@ -31,17 +40,7 @@ const ContactsSettings: React.FC = () => {
         shouldDirty: true,
         shouldTouch: true,
       }),
-    [setValue],
-  );
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['contacts']>(key: TKey) =>
-    (value: ProfileReadmeConfig['contacts'][TKey]) =>
-      setValue(`contacts.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
+    [setValue]
   );
 
   const handleItemChange = <TKey extends keyof ContactItem>(index: number, key: TKey, value: ContactItem[TKey]) => {
@@ -78,7 +77,7 @@ const ContactsSettings: React.FC = () => {
         <Switch
           label="Показывать контакты"
           checked={contacts?.active ?? false}
-          onChange={(event) => handleChange('active')(event.currentTarget.checked)}
+          onChange={(event) => setFieldValue('contacts.active')(event.currentTarget.checked)}
         />
 
         <Stack gap="sm">

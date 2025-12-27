@@ -1,25 +1,22 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Grid, Paper, Stack, Switch, Text, Textarea, Title } from '@mantine/core';
+import { Switch, Textarea } from '@mantine/core';
 
-import type { ProfileReadmeConfig } from 'core/types';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Grid from '@/shared/ui/grid';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const AboutSettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const { control } = useFormContext<ProfileReadmeConfig>();
   const about = useWatch({ control, name: 'about' });
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['about']>(key: TKey) =>
-    (value: ProfileReadmeConfig['about'][TKey]) =>
-      setValue(`about.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   const handleValuesChange = (value: string) => {
     const parsed = value
@@ -27,7 +24,7 @@ const AboutSettings: React.FC = () => {
       .map((item) => item.trim())
       .filter(Boolean);
 
-    handleChange('values')(parsed);
+    setFieldValue('about.values')(parsed);
   };
 
   return (
@@ -43,7 +40,7 @@ const AboutSettings: React.FC = () => {
         <Switch
           label="Показывать блок в README"
           checked={about?.active ?? false}
-          onChange={(event) => handleChange('active')(event.currentTarget.checked)}
+          onChange={(event) => setFieldValue('about.active')(event.currentTarget.checked)}
         />
 
         <Grid gutter="md">
@@ -54,7 +51,7 @@ const AboutSettings: React.FC = () => {
               autosize
               minRows={2}
               value={about?.shortBio ?? ''}
-              onChange={(event) => handleChange('shortBio')(event.currentTarget.value)}
+              onChange={(event) => setFieldValue('about.shortBio')(event.currentTarget.value)}
             />
           </Grid.Col>
 
@@ -63,7 +60,7 @@ const AboutSettings: React.FC = () => {
               label="Над чем сейчас работаешь"
               placeholder="Building internal design system"
               value={about?.currentFocus ?? ''}
-              onChange={(value) => handleChange('currentFocus')(value)}
+              onChange={setFieldValue('about.currentFocus')}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -71,7 +68,7 @@ const AboutSettings: React.FC = () => {
               label="Что сейчас изучаешь"
               placeholder="Web security, performance profiling"
               value={about?.currentlyLearning ?? ''}
-              onChange={(value) => handleChange('currentlyLearning')(value)}
+              onChange={setFieldValue('about.currentlyLearning')}
             />
           </Grid.Col>
 
@@ -80,7 +77,7 @@ const AboutSettings: React.FC = () => {
               label="Что ищешь / открыт к"
               placeholder="Open to senior frontend roles (remote, EU timezones)"
               value={about?.lookingFor ?? ''}
-              onChange={(value) => handleChange('lookingFor')(value)}
+              onChange={setFieldValue('about.lookingFor')}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>

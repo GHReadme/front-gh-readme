@@ -1,12 +1,16 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Title, Text, Stack, Paper, Grid } from '@mantine/core';
-
-import type { ProfileReadmeConfig } from 'core/types';
-import { useGithubUser } from './api';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import { useGithubUser } from '@/shared/hooks/useGithubUser';
+import Grid from '@/shared/ui/grid';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const ProfileSettings: React.FC = () => {
   const {
@@ -17,34 +21,22 @@ const ProfileSettings: React.FC = () => {
   const profile = useWatch({ control, name: 'profile' });
   const { data: githubUser } = useGithubUser(profile?.username);
   const profileDirty = useMemo(() => dirtyFields?.profile ?? {}, [dirtyFields]);
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['profile']>(key: TKey) =>
-    (value: string) =>
-      setValue(`profile.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   useEffect(() => {
     if (!githubUser) return;
 
     const updates: Partial<ProfileReadmeConfig['profile']> = {};
 
-    if (githubUser.name && !profile?.fullName && !profileDirty.fullName)
-      updates.fullName = githubUser.name;
-    if (githubUser.company && !profile?.company && !profileDirty.company)
-      updates.company = githubUser.company;
-    if (githubUser.location && !profile?.location && !profileDirty.location)
-      updates.location = githubUser.location;
+    if (githubUser.name && !profile?.fullName && !profileDirty.fullName) updates.fullName = githubUser.name;
+    if (githubUser.company && !profile?.company && !profileDirty.company) updates.company = githubUser.company;
+    if (githubUser.location && !profile?.location && !profileDirty.location) updates.location = githubUser.location;
 
     (Object.keys(updates) as (keyof ProfileReadmeConfig['profile'])[]).forEach((key) => {
       const value = updates[key];
 
       if (typeof value !== 'undefined') {
-        setValue(`profile.${key}` as Path<ProfileReadmeConfig>, value, {
+        setValue(`profile.${key}`, value, {
           shouldDirty: true,
           shouldTouch: true,
         });
@@ -67,7 +59,7 @@ const ProfileSettings: React.FC = () => {
           placeholder="octocat"
           description="Используется для загрузки данных с GitHub API."
           value={profile?.username}
-          onChange={handleChange('username')}
+          onChange={setFieldValue('profile.username')}
           required
         />
 
@@ -78,7 +70,7 @@ const ProfileSettings: React.FC = () => {
               placeholder="Фамилия Имя Отчество"
               description="Отображается в README, если указано."
               value={profile?.fullName}
-              onChange={handleChange('fullName')}
+              onChange={setFieldValue('profile.fullName')}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -87,7 +79,7 @@ const ProfileSettings: React.FC = () => {
               placeholder="Senior Frontend Developer"
               description="Короткая формулировка вашей роли."
               value={profile?.role}
-              onChange={handleChange('role')}
+              onChange={setFieldValue('profile.role')}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -96,7 +88,7 @@ const ProfileSettings: React.FC = () => {
               placeholder="AwesomeCorp"
               description="Текущая компания или род занятий."
               value={profile?.company}
-              onChange={handleChange('company')}
+              onChange={setFieldValue('profile.company')}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -105,7 +97,7 @@ const ProfileSettings: React.FC = () => {
               placeholder="Россия, Москва"
               description="Город или формат работы (например, Remote)."
               value={profile?.location}
-              onChange={handleChange('location')}
+              onChange={setFieldValue('profile.location')}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -114,7 +106,7 @@ const ProfileSettings: React.FC = () => {
               placeholder="React · TypeScript · Node.js"
               description="Короткая строка с ключевыми технологиями."
               value={profile?.mainStackLine}
-              onChange={handleChange('mainStackLine')}
+              onChange={setFieldValue('profile.mainStackLine')}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -123,7 +115,7 @@ const ProfileSettings: React.FC = () => {
               placeholder="English, Russian"
               description="Например: English, Russian"
               value={profile?.languages}
-              onChange={handleChange('languages')}
+              onChange={setFieldValue('profile.languages')}
             />
           </Grid.Col>
         </Grid>

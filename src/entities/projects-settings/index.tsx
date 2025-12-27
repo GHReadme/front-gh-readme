@@ -1,32 +1,34 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Button, Grid, Group, Paper, Stack, Switch, Text, TextInput as MantineTextInput, Textarea, Title } from '@mantine/core';
+import { Button, TextInput as MantineTextInput, Switch, Textarea } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
-import type { FeaturedProject, ProfileReadmeConfig } from 'core/types';
-import NumberInput from 'shared/ui/inputs/number-input';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { FeaturedProject, ProfileReadmeConfig } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Grid from '@/shared/ui/grid';
+import Group from '@/shared/ui/group';
+import NumberInput from '@/shared/ui/inputs/number-input';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const ProjectsSettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const { control } = useFormContext<ProfileReadmeConfig>();
   const projects = useWatch({ control, name: 'projects' });
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['projects']>(key: TKey) =>
-    (value: ProfileReadmeConfig['projects'][TKey]) =>
-      setValue(`projects.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
-
-  const updateProject = <TKey extends keyof FeaturedProject>(index: number, key: TKey, value: FeaturedProject[TKey]) => {
+  const updateProject = <TKey extends keyof FeaturedProject>(
+    index: number,
+    key: TKey,
+    value: FeaturedProject[TKey]
+  ) => {
     const next = [...(projects?.items ?? [])];
     next[index] = { ...next[index], [key]: value } as FeaturedProject;
-    handleChange('items')(next);
+    setFieldValue('projects.items')(next);
   };
 
   const addProject = () => {
@@ -40,13 +42,13 @@ const ProjectsSettings: React.FC = () => {
       },
     ];
 
-    handleChange('items')(next);
+    setFieldValue('projects.items')(next);
   };
 
   const removeProject = (index: number) => {
     const next = [...(projects?.items ?? [])];
     next.splice(index, 1);
-    handleChange('items')(next);
+    setFieldValue('projects.items')(next);
   };
 
   const handleTechChange = (index: number, value: string) => {
@@ -71,7 +73,7 @@ const ProjectsSettings: React.FC = () => {
         <Switch
           label="Показывать проекты"
           checked={projects?.active ?? false}
-          onChange={(event) => handleChange('active')(event.currentTarget.checked)}
+          onChange={(event) => setFieldValue('projects.active')(event.currentTarget.checked)}
         />
 
         <Grid gutter="sm">
@@ -80,7 +82,7 @@ const ProjectsSettings: React.FC = () => {
               label="Максимум проектов для показа"
               placeholder="3"
               value={projects?.maxToShow ?? null}
-              onChange={(value) => handleChange('maxToShow')(value ?? undefined)}
+              onChange={(value) => setFieldValue('projects.maxToShow')(value ?? undefined)}
               min={1}
             />
           </Grid.Col>
@@ -88,7 +90,7 @@ const ProjectsSettings: React.FC = () => {
             <Switch
               label="Сначала выделенные проекты"
               checked={projects?.showHighlightedFirst ?? false}
-              onChange={(event) => handleChange('showHighlightedFirst')(event.currentTarget.checked)}
+              onChange={(event) => setFieldValue('projects.showHighlightedFirst')(event.currentTarget.checked)}
             />
           </Grid.Col>
         </Grid>

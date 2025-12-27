@@ -2,11 +2,11 @@
 
 import { FormProvider, useForm } from 'react-hook-form';
 
-import type { ProfileReadmeConfig } from 'core/types';
-import Tabs from 'shared/ui/tabs';
-import { TabType } from 'shared/ui/tabs/types';
-import BaseSettings from 'widgets/base-settings';
-import StatsSettings from 'widgets/stats-settings';
+import type { ProfileReadmeConfig } from '@/core/types';
+import Tabs from '@/shared/ui/tabs';
+import { TabType } from '@/shared/ui/tabs/types';
+import BaseSettings from '@/widgets/base-settings';
+import StatsSettings from '@/widgets/stats-settings';
 
 const tabs: TabType[] = [
   {

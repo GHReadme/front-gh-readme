@@ -1,15 +1,14 @@
 import React from 'react';
 
-import { Stack } from '@mantine/core';
-
-import AboutSettings from 'entities/about-settings';
-import ActivitySettings from 'entities/activity-settings';
-import ContactsSettings from 'entities/contacts-settings';
-import ContentSettings from 'entities/content-settings';
-import FunFactsSettings from 'entities/fun-facts-settings';
-import ProfileSettings from 'entities/profile-settings';
-import ProjectsSettings from 'entities/projects-settings';
-import TechStackSettings from 'entities/tech-stack-settings';
+import AboutSettings from '@/entities/about-settings';
+import ActivitySettings from '@/entities/activity-settings';
+import ContactsSettings from '@/entities/contacts-settings';
+import ContentSettings from '@/entities/content-settings';
+import FunFactsSettings from '@/entities/fun-facts-settings';
+import ProfileSettings from '@/entities/profile-settings';
+import ProjectsSettings from '@/entities/projects-settings';
+import TechStackSettings from '@/entities/tech-stack-settings';
+import Stack from '@/shared/ui/stack';
 
 /**
  * Тут собираются все entities внутри которых уже обработка полей

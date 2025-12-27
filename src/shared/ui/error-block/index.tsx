@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getErrorMessage } from 'core/api';
+import { getErrorMessage } from '@/core/api';
 
 interface ErrorBlockProps {
   error: unknown;

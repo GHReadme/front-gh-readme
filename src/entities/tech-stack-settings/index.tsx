@@ -1,12 +1,20 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { Path, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import { Button, Grid, Group, Paper, Select, Stack, Switch, Text, TextInput as MantineTextInput, Title } from '@mantine/core';
+import { Button, TextInput as MantineTextInput, Switch } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
-import type { ProfileReadmeConfig, StackItem } from 'core/types';
-import TextInput from 'shared/ui/inputs/text-input';
+import type { ProfileReadmeConfig, StackItem } from '@/core/types';
+import { useFormField } from '@/shared/hooks/useFormField';
+import Grid from '@/shared/ui/grid';
+import Group from '@/shared/ui/group';
+import TextInput from '@/shared/ui/inputs/text-input';
+import Paper from '@/shared/ui/paper';
+import Select from '@/shared/ui/select';
+import Stack from '@/shared/ui/stack';
+import Text from '@/shared/ui/text';
+import Title from '@/shared/ui/title';
 
 const stackCategories: { label: string; value: StackItem['category'] }[] = [
   { label: 'Language', value: 'language' },
@@ -28,47 +36,38 @@ const stackLevels: { label: string; value: NonNullable<StackItem['level']> }[] =
 ];
 
 const TechStackSettings: React.FC = () => {
-  const { control, setValue } = useFormContext<ProfileReadmeConfig>();
+  const { control } = useFormContext<ProfileReadmeConfig>();
   const techStack = useWatch({ control, name: 'techStack' });
-
-  const handleChange = useCallback(
-    <TKey extends keyof ProfileReadmeConfig['techStack']>(key: TKey) =>
-    (value: ProfileReadmeConfig['techStack'][TKey]) =>
-      setValue(`techStack.${key}` as Path<ProfileReadmeConfig>, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-      }),
-    [setValue],
-  );
+  const { setFieldValue } = useFormField<ProfileReadmeConfig>();
 
   const updateGroupItem = (
     groupIndex: number,
     itemIndex: number,
     key: keyof StackItem,
-    value: StackItem[keyof StackItem],
+    value: StackItem[keyof StackItem]
   ) => {
     const nextGroups = [...(techStack?.groups ?? [])];
     const items = [...(nextGroups[groupIndex]?.items ?? [])];
     items[itemIndex] = { ...items[itemIndex], [key]: value } as StackItem;
     nextGroups[groupIndex] = { ...nextGroups[groupIndex], items };
-    handleChange('groups')(nextGroups);
+    setFieldValue('techStack.groups')(nextGroups);
   };
 
   const updateGroupTitle = (groupIndex: number, title: string) => {
     const nextGroups = [...(techStack?.groups ?? [])];
     nextGroups[groupIndex] = { ...nextGroups[groupIndex], title };
-    handleChange('groups')(nextGroups);
+    setFieldValue('techStack.groups')(nextGroups);
   };
 
   const addGroup = () => {
     const nextGroups = [...(techStack?.groups ?? []), { title: 'Новая группа', items: [] }];
-    handleChange('groups')(nextGroups);
+    setFieldValue('techStack.groups')(nextGroups);
   };
 
   const removeGroup = (groupIndex: number) => {
     const nextGroups = [...(techStack?.groups ?? [])];
     nextGroups.splice(groupIndex, 1);
-    handleChange('groups')(nextGroups);
+    setFieldValue('techStack.groups')(nextGroups);
   };
 
   const addTech = (groupIndex: number) => {
@@ -76,7 +75,7 @@ const TechStackSettings: React.FC = () => {
     const items = [...(nextGroups[groupIndex]?.items ?? [])];
     items.push({ name: '', category: 'other', level: 'intermediate', icon: '' });
     nextGroups[groupIndex] = { ...nextGroups[groupIndex], items };
-    handleChange('groups')(nextGroups);
+    setFieldValue('techStack.groups')(nextGroups);
   };
 
   const removeTech = (groupIndex: number, itemIndex: number) => {
@@ -84,7 +83,7 @@ const TechStackSettings: React.FC = () => {
     const items = [...(nextGroups[groupIndex]?.items ?? [])];
     items.splice(itemIndex, 1);
     nextGroups[groupIndex] = { ...nextGroups[groupIndex], items };
-    handleChange('groups')(nextGroups);
+    setFieldValue('techStack.groups')(nextGroups);
   };
 
   return (
@@ -100,13 +99,13 @@ const TechStackSettings: React.FC = () => {
         <Switch
           label="Показывать техстек"
           checked={techStack?.active ?? false}
-          onChange={(event) => handleChange('active')(event.currentTarget.checked)}
+          onChange={(event) => setFieldValue('techStack.active')(event.currentTarget.checked)}
         />
 
         <Switch
           label="Группировать стек"
           checked={techStack?.grouped ?? false}
-          onChange={(event) => handleChange('grouped')(event.currentTarget.checked)}
+          onChange={(event) => setFieldValue('techStack.grouped')(event.currentTarget.checked)}
         />
 
         <Stack gap="md">
@@ -163,7 +162,12 @@ const TechStackSettings: React.FC = () => {
                               data={stackCategories}
                               value={item.category}
                               onChange={(value) =>
-                                updateGroupItem(groupIndex, itemIndex, 'category', (value ?? 'other') as StackItem['category'])
+                                updateGroupItem(
+                                  groupIndex,
+                                  itemIndex,
+                                  'category',
+                                  (value ?? 'other') as StackItem['category']
+                                )
                               }
                             />
                           </Grid.Col>
@@ -174,7 +178,12 @@ const TechStackSettings: React.FC = () => {
                               clearable
                               value={item.level ?? null}
                               onChange={(value) =>
-                                updateGroupItem(groupIndex, itemIndex, 'level', (value ?? undefined) as StackItem['level'])
+                                updateGroupItem(
+                                  groupIndex,
+                                  itemIndex,
+                                  'level',
+                                  (value ?? undefined) as StackItem['level']
+                                )
                               }
                             />
                           </Grid.Col>
